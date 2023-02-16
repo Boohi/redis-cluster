@@ -101,6 +101,7 @@ function clean {
 	# Disable all services
 	for ((i=0; i<NUM_OF_NODES; i++)); do
 		port=$((STARTING_PORT + i))
+		sudo systemctl stop redis_$port.service
 		sudo systemctl disable redis_$port.service
 	done
 	sudo systemctl daemon-reload
