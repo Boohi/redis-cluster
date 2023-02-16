@@ -71,7 +71,10 @@ function create_service_files {
 }
 
 function clean {
-	rm -rf nodes
+	sudo rm -rf /etc/redis/cluster
+	sudo rm -rf /var/lib/Redis
+	sudo rm -rf /etc/systemd/system/redis_70*.service
+	echo "Cleaned up"
 }
 
 case $1 in
