@@ -70,10 +70,25 @@ function create_service_files {
 	done
 }
 
+function start_services {
+	sudo systemctl daemon-reload
+	for ((i=0; i<NUM_OF_NODES; i++)); do
+		port=$((STARTING_PORT + i))
+		sudo systemctl start redis_$port.service
+		sudo systemctl enable redis_$port.service
+	done
+}
+
 function clean {
 	sudo rm -rf /etc/redis/cluster
 	sudo rm -rf /var/lib/Redis
 	sudo rm -rf /etc/systemd/system/redis_70*.service
+	# Disable all services
+	for ((i=0; i<NUM_OF_NODES; i++)); do
+		port=$((STARTING_PORT + i))
+		sudo systemctl disable redis_$port.service
+	done
+	sudo systemctl daemon-reload
 	echo "Cleaned up"
 }
 
@@ -85,7 +100,7 @@ case $1 in
 		create_service_files
 		;;
 	start)
-		echo "$AUTH"
+		start_services
 		;;
 	delete)
 		clean
