@@ -4,12 +4,12 @@ STARTING_PORT=7000
 # Number of nodes to create. Should be an even number
 NUM_OF_NODES=6
 
-# Directory where the redis nodes will be created. Defaults to the current directory
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 # Add your own auth key, imported from .env file
 . ./.env
 AUTH=$MASTERPASS
+
+# Get IP Address of the server
+IP=$(hostname -I | grep -o "^[0-9.]*")
 
 function create_node_folders {
 	for ((i=0; i<NUM_OF_NODES; i++)); do
@@ -79,6 +79,17 @@ function start_services {
 	done
 }
 
+function start_cluster {
+	command="redis-cli --cluster create"
+	for ((i=0; i<NUM_OF_NODES; i++)); do
+		port=$((STARTING_PORT + i))
+		command+=" $IP:$port"
+	done
+	command+=" --cluster-replicas 1"
+	eval "$command"
+	echo "Cluster started"
+}
+
 function clean {
 	sudo rm -rf /etc/redis/cluster
 	sudo rm -rf /var/lib/Redis
@@ -101,6 +112,7 @@ case $1 in
 		;;
 	start)
 		start_services
+		start_cluster
 		;;
 	delete)
 		clean
