@@ -7,8 +7,9 @@ NUM_OF_NODES=6
 # Directory where the redis nodes will be created. Defaults to the current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Add your own auth key
-AUTH="XXXXXXXXXXX"
+# Add your own auth key, imported from .env file
+. ./.env
+AUTH=$MASTERPASS
 
 function create_node_folders {
 	for ((i=0; i<NUM_OF_NODES; i++)); do
@@ -81,6 +82,7 @@ case $1 in
 		create_service_files
 		;;
 	start)
+		echo "$AUTH"
 		;;
 	delete)
 		clean
