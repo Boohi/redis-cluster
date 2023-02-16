@@ -35,7 +35,11 @@ function create_config_files {
 			echo "masterauth $AUTH"
 
 		} >> "$DIR"/nodes/node-$port/redis-$port.conf
+		mkdir -p /var/lib/redis/$port
 	done
+	chown redis:redis -R /var/lib/redis
+	chmod 770 -R /var/lib/redis
+	chown redis:redis -R /etc/redis
 }
 
 function create_service_files {
@@ -61,6 +65,7 @@ function create_service_files {
 			echo "[Install]"
 			echo "WantedBy=multi-user.target"
 		} >> $TARGET_DIR
+		
 	done
 }
 
