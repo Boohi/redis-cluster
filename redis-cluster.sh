@@ -28,7 +28,7 @@ function create_config_files {
 			echo "protected-mode no"
 			echo "cluster-enabled yes"
 			echo "cluster-node-timeout 5000"
-			echo "cluster-config-file $DIR/nodes/node-$port/nodes-$port.conf"
+			echo "cluster-config-file /etc/redis/cluster/node-$port/nodes_$port.conf"
 			echo "pidfile /var/run/redis/redis_$port.pid"
 			echo "logfile /var/log/redis/redis_$port.log"
 			echo "loglevel notice"
@@ -54,7 +54,7 @@ function create_service_files {
 			echo "After=network.target"
 
 			echo "[Service]"
-			echo "ExecStart=/usr/bin/redis-server "$DIR"/nodes/node-$port/redis-$port.conf --supervised systemd"
+			echo "ExecStart=/usr/bin/redis-server /etc/redis/cluster/node-$port/redis_$port.conf --supervised systemd"
 			echo "ExecStop=/bin/redis-cli -h 127.0.0.1 -p $port shutdown"
 			echo "Type=notify"
 			echo "User=redis"
