@@ -13,7 +13,7 @@ AUTH="XXXXXXXXXXX"
 function create_node_folders {
 	for ((i=0; i<NUM_OF_NODES; i++)); do
 		port=$((STARTING_PORT + i))
-		mkdir -p nodes/node-$port
+		sudo mkdir -p /etc/redis/cluster/node-$port
 	done
 }
 
@@ -34,12 +34,12 @@ function create_config_files {
 			echo "requirepass $AUTH"
 			echo "masterauth $AUTH"
 
-		} >> "$DIR"/nodes/node-$port/redis-$port.conf
-		mkdir -p /var/lib/redis/$port
+		} >> /etc/redis/cluster/node-$port/redis-$port.conf
+		sudo mkdir -p /var/lib/redis/$port
 	done
-	chown redis:redis -R /var/lib/redis
-	chmod 770 -R /var/lib/redis
-	chown redis:redis -R /etc/redis
+	sudo chown redis:redis -R /var/lib/redis
+	sudo chmod 770 -R /var/lib/redis
+	sudo chown redis:redis -R /etc/redis
 }
 
 function create_service_files {
