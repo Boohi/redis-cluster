@@ -85,7 +85,7 @@ function start_cluster {
 		port=$((STARTING_PORT + i))
 		command+=" $IP:$port"
 	done
-	command+=" --cluster-replicas 1"
+	command+=" --cluster-replicas 1 -a $AUTH"
 	eval "$command"
 	echo "Cluster started"
 }
