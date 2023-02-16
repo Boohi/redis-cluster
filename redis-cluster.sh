@@ -11,6 +11,9 @@ AUTH=$MASTERPASS
 # Get IP Address of the server
 IP=$(hostname -I | grep -o "^[0-9.]*")
 
+# RedisJSON module location
+REDISJSON_MODULE=/home/boohi/RedisJSON/target/release/librejson.so
+
 function create_node_folders {
 	for ((i=0; i<NUM_OF_NODES; i++)); do
 		port=$((STARTING_PORT + i))
@@ -34,6 +37,7 @@ function create_config_files {
 			echo "loglevel notice"
 			echo "requirepass $AUTH"
 			echo "masterauth $AUTH"
+			echo "loadmodule $REDISJSON_MODULE"
 
 		} >> /etc/redis/cluster/node-$port/redis-$port.conf
 		sudo mkdir -p /var/lib/redis/$port
